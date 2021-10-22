@@ -1,7 +1,9 @@
 ﻿from game import Game
+from menu import Menu
 
 g = Game()
+m = Menu(g)
 
 while g.running:
-    g.playing = True
-    g.game_loop()
+    m.draw_buttons()
+    m.open_menu()
