@@ -1,3 +1,6 @@
+import cv2
+import pygame
+
 class Player:
     UniqueID = 0 # Глобальный счетчик ID
     def __init__(self, name: str, avatar: str=None, connection: str=None):
@@ -24,14 +27,23 @@ class Player:
         
         return (i < len(self._answers))
 
-    def drawPlayer(self, x: int, y: int) -> None:
-        # Прорисовка игрока в точке (x, y) экрана
-        if not isinstance(x, int):
-            raise TypeError(f"x must be {int}. {type(x)} was given")
-        if not isinstance(y, int):
-            raise TypeError(f"y must be {int}. {type(y)} was given")
+    def drawPlayer(self, red: int, green: int, blue: int) -> None:
+        # Обработка аватара игрока
+        if not isinstance(red, int):
+            raise TypeError(f"red must be {int}. {type(red)} was given")
+        if not isinstance(green, int):
+            raise TypeError(f"green must be {int}. {type(green)} was given")
+        if not isinstance(blue, int):
+            raise TypeError(f"blue must be {int}. {type(blue)} was given")
+        if red > 255 or green > 255 or blue > 255 or red < 0 or green < 0 or blue < 0:
+            raise ValueError("red, blue and green values must be between 0 and 255")
         
-        pass
+        avatar = cv2.imread(self._avatar)
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        scale = avatar.shape[1] / 100
+        thickness = avatar.shape[1] // 100 + 1
+        cv2.putText(avatar, self._name, (0, avatar.shape[0]), font, scale, (red, green, blue), thickness, cv2.LINE_AA)
+        return pygame.image.frombuffer(avatar.tostring(), avatar.shape[1::-1], "BGR")
     
     def addPoints(self, x: int):
         # Установка 'x' очков игроку за последний раунд
