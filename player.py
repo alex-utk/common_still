@@ -36,11 +36,7 @@ class Player:
             Обработка аватара игрока        
         '''    
 
-        if self._path_to_avatar == None:
-            raise ValueError("You must provide a path to avatar")
-
-        avatar = pygame.image.load(self._path_to_avatar)
-        return avatar
+        return self._avatar
     
     def addPoints(self, x: int):
         '''
