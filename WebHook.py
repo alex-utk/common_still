@@ -32,7 +32,7 @@ def check_user(id):
         m = knownRooms[i].count()
         for j in range(m):
             if knownRooms[i].Users[j] == id:
-                f = i
+                f = knownRooms[i].UID
                 break
     return f
 
@@ -46,6 +46,7 @@ def command_create_room(m):
     buf = Room()
     #Заглушка, создание UID для комнаты на основе порядка её создания в боте
     buf.setUID(len(knownRooms) + 1)
+    buf.set_lead(id)
     bot.send_message(id, 'Room created, Room UID: {}'.format(buf.UID))
     knownRooms.append(buf)
 
@@ -111,10 +112,20 @@ def command_rooms(m):
 @bot.message_handler(commands=['send_ans'])
 def command_send_ans(m):
     """
-    Обработка команды принятия ответа пользователя, пока пустая!!!!
+    Обработка команды принятия ответа пользователя
     """
     id = m.from_user.id
-    bot.send_message(id, 'Cock and ball') 
+    mes_text = m.text[9:]
+    check1 = check_user(id)
+    if check1 == -1:
+        bot.send_message(id, 'You havent entered the Room yet')
+        return
+    room_id = 0
+    for i in range(len(knownRooms)):
+        if knownRooms[i].UID == check1:
+            room_id = knownRooms[i].lead
+    bot.send_message(room_id, 'user:{} ans:{}'.format(id, mes_text))
+    bot.send_message(id, 'user:{} - Your answer succsessuly send'.format(id))
 
 @bot.message_handler(commands=['help'])
 def command_help(m):
