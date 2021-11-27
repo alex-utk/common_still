@@ -2,6 +2,13 @@
     def __init__(self):
         self.UID = -1 #Уникальный идентификатор комнаты, формат AAAA, 4 латинские буквы
         self.Users = [] #Массив id пользователей данной комнаты
+        self.lead = 0 #ID создателя комнаты
+
+    def set_lead(self, x):
+        """
+        Установить лидера комнаты
+        """
+        self.lead = x
     
     def insert(self, x):
         """
