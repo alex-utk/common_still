@@ -33,8 +33,11 @@ class Player:
 
     def drawPlayer(self) -> pygame.image:
         '''
-            Обработка аватара игрока        
+            Вывод аватара игрока        
         '''    
+
+        if self._path_to_avatar is None:
+            raise ValueError("path_to_avatar is required to be set")
 
         return self._avatar
     
@@ -185,6 +188,9 @@ class Player:
         '''
             Вывод аватара игрока
         '''
+
+        if self._path_to_avatar is None:
+            raise ValueError("path_to_avatar is required to be set")
 
         return self._avatar
 
