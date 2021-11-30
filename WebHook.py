@@ -1,4 +1,7 @@
-﻿from room import Room
+﻿from logging import raiseExceptions
+from room import Room
+from Ans import Answer
+from datetime import datetime
 import telebot
 #from telebot import type
 
@@ -7,6 +10,9 @@ TOKEN = '1757432372:AAHNMbgLfYR6Yb4nR76cAY67Voju8MGTzpQ'
 
 #Список комнат
 knownRooms = []
+
+#Список ответов пользователей
+answers = []
 
 #Доступные команды
 commands = {
@@ -35,6 +41,22 @@ def check_user(id):
                 f = knownRooms[i].UID
                 break
     return f
+
+def send_message_to_room(UID, mes):
+    """
+    Функция отправки сообщения mes всем пользователям комнаты с номером UID
+    """
+    f = False
+    for i in range(len(knownRooms)):
+        if knownRooms[i].UID == UID:
+            f = True
+            for j in range(len(knownRooms[i].users)):
+                bot.send_message(knownRooms[i].users[j], mes)
+        else:
+            continue
+    if f == False:
+        raiseExceptions('There is no room with UID: {}'.format(UID))
+
 
 
 @bot.message_handler(commands=['create_room'])
@@ -116,6 +138,8 @@ def command_send_ans(m):
     """
     id = m.from_user.id
     mes_text = m.text[9:]
+    #Фиксирование всех ответов в один массив на всякий случай
+    answers.append(Answer(mes_text, id, datetime.now()))
     check1 = check_user(id)
     if check1 == -1:
         bot.send_message(id, 'You havent entered the Room yet')
@@ -125,7 +149,21 @@ def command_send_ans(m):
         if knownRooms[i].UID == check1:
             room_id = knownRooms[i].lead
     bot.send_message(room_id, 'user:{} ans:{}'.format(id, mes_text))
-    bot.send_message(id, 'user:{} - Your answer succsessuly send'.format(id))
+    bot.send_message(id, 'user:{} - Your answer successfully send'.format(id))
+
+@bot.message_handler(commands=['check_ans'])
+def command_check_ans(m):
+    id = m.from_user.id
+    text = "Users sent following answers: \n"
+    for a in answers:
+        text += "User: " + str(a.user) + ' ' + "Time: " + str(a.time) + ' ' + "Ans: " + a.text + "\n"
+    bot.send_message(id, text)
+
+@bot.message_handler(commands=['new_round'])
+def command_new_round(m):
+    id = m.from_user.id
+    answers.clear()
+    bot.send_message(id, 'All answers cleared, ready to start new round')
 
 @bot.message_handler(commands=['help'])
 def command_help(m):
