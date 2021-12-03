@@ -1,7 +1,8 @@
 ﻿class Room:
     def __init__(self):
         self.UID = -1 #Уникальный идентификатор комнаты, формат AAAA, 4 латинские буквы
-        self.Users = [] #Массив id пользователей данной комнаты
+        self.UsersID = [] #Массив id пользователей данной комнаты
+        self.UsersNick = [] #Массив nick name пользователей данной комнаты
         self.lead = 0 #ID создателя комнаты
 
     def set_lead(self, x):
@@ -10,29 +11,32 @@
         """
         self.lead = x
     
-    def insert(self, x):
+    def insert(self, x, y):
         """
         Вставка нового пользователя
         """
-        self.Users.append(x)
+        self.UsersID.append(x)
+        self.UsersNick.append(y)
 
-    def remove(self, x):
+    def remove(self, x, y):
         """
         Удаление пользователя 
         """
-        self.Users.remove(x)
+        self.UsersID.remove(x)
+        self.UsersNick.remove(y)
 
     def count(self):
         """
         Вернуть текущее количество пользователей
         """
-        return len(self.Users)
+        return len(self.UsersID)
 
     def clear(self):
         """
         Очистить список пользователей
         """
-        self.Users.clear()
+        self.UsersID.clear()
+        self.UsersNick.clear()
 
     def setUID(self, x):
         self.UID = x
