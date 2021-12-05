@@ -1,3 +1,8 @@
+#                  Pygame Video Player                #
+#                LGPL 3.0 - Kadir Aksoy               #
+#       https://github.com/kadir014/pygamevideo       #
+
+
 import time
 import os
 import pygame
@@ -63,9 +68,10 @@ class Time:
 
 
 class Video:
-    def __init__(self, filepath):
+    def __init__(self, filepath, pos = (0, 0)):
         self.is_ready = False
         self.load(filepath)
+        self.pos = pos
 
     def __repr__(self):
         return f"<pygamevideo.Video(frame#{self.current_frame})>"
@@ -90,6 +96,7 @@ class Video:
         self.is_muted = False
 
         self.vidcap  = cv2.VideoCapture(self.filepath)
+        self.buff = cv2.VideoCapture(self.filepath)
         self.ff = MediaPlayer(self.filepath)
 
         self.fps = self.vidcap.get(cv2.CAP_PROP_FPS)
@@ -114,6 +121,17 @@ class Video:
         self.is_ready = False
 
     # Control methods
+    def getFrameForTime(self, time):
+        self.buff.set(0, time)
+        ret, frame = self.buff.read()
+        pygame.pixelcopy.array_to_surface(self.frame_surf, numpy.flip(numpy.rot90(frame[::-1])))
+        return self._scaled_frame()
+
+    def getFrameForNumber(self, ind):
+        self.buff.set(1, ind)
+        ret, frame = self.buff.read()
+        pygame.pixelcopy.array_to_surface(self.frame_surf, numpy.flip(numpy.rot90(frame[::-1])))
+        return self._scaled_frame()
 
     def play(self, loop=False):
         if not self.is_playing:
@@ -145,14 +163,14 @@ class Video:
             self.is_ended = True
             self.is_looped = False
             self.draw_frame = 0
-
+            self.last_frame = self.getFrameForNumber(self.total_frames - 1)
             self.frame_surf = pygame.Surface((self.frame_width, self.frame_height))
 
             self.release()
 
     def pause(self):
         self.is_paused = True
-        self.ff.set_pause(True)
+        sel.ff.set_pause(True)
 
     def resume(self):
         self.is_paused = False
@@ -303,7 +321,8 @@ class Video:
 
             return self._scaled_frame()
 
-    def draw_to(self, surface, pos):
+    def draw(self, surface):
         frame = self.get_frame()
-
-        surface.blit(frame, pos)
+        if not self.is_playing:
+            frame = self.last_frame
+        surface.blit(frame, self.pos)
