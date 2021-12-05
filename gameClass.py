@@ -1,56 +1,78 @@
 import pygame
 import random
 import os
+import random
 
-def draw_text(text, size, x, y, mode = 0, font_name = pygame.font.match_font('arial')):
+font_name = pygame.font.match_font('arial')
+def draw_text(text, size, x, y, mode = "midtop"):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, (0, 0, 0))
     text_rect = text_surface.get_rect()
-    if mode == 0:
+    if mode == "midtop":
         text_rect.midtop = (x, y)
-    else:
+    elif mode == "topleft":
         text_rect.topleft = (x, y)
-    return(text_surface, text_rect)
+    elif mode == "center":
+        text_rect.center = (x, y)
+    return text_surface, text_rect
 
 class timerSprite(pygame.sprite.Sprite):
-    def __init__(self, fps = 30):
+    def __init__(self, Width = 100, Height = 100, x = 0, y = 0, fps = 30, on_stop = lambda x: None, text = ""):
         pygame.sprite.Sprite.__init__(self)
         self.tick = 0
         self.fps = fps
-        self.width = 100
-        self.height = 100
-        self.color = (0, 255, 0)
-        self.image = pygame.Surface((self.width, self.height))
-        self.image.fill(self.color)
-        self.rect = self.image.get_rect()
-        self.spritesGroup = None
-        self.interval = 0
-
-    def timerStart(self, interval, spritesGroup, Width, Height, x, y):
-        self.image = pygame.Surface((Width, Height))
+        self.image = pygame.Surface((Width - 100, 25))
+        self.surf = pygame.Surface((Width, Height))
+        self.surf.fill((169, 169, 169))
+        self.rect = self.surf.get_rect()
         self.width = Width
         self.height = Height
-        self.spritesGroup = spritesGroup
-        self.interval = interval
+        self.on = False
+        self.color = (0, 255, 0)
+        self.image.fill(self.color)
+        self.viseble = True
+        self.x = x
+        self.y = y 
         self.rect.center = (x, y)
-        self.spritesGroup.add(self)
+        self.interval = 0
+        self.on_stop = on_stop
+        (self.text_surface1, self.text_rect1) = draw_text(text, 50, self.x, self.y - Height / 4, "center")
+
+    def timerStart(self, interval, on_stop = lambda x: None):
+        self.interval = interval
+        self.on = True
+        self.tick = 0
+        self.on_stop = on_stop
     
     def update(self):
+        if not self.on:
+            return
         cntTick = self.fps * self.interval
         self.tick += 1
-        scale = self.width * ( (cntTick - self.tick) / cntTick)
+        scale = (self.width - 100) * ( (cntTick - self.tick) / cntTick)
         if scale > 1:
             self.image = pygame.Surface((scale, 25))
             self.image.fill(self.color)
-            txt = str(90 - self.tick // 30)
-            size = self.height - 2
-            (text_surface, text_rect) = draw_text(txt, size, 0, 0, 1)
-            self.image.blit(text_surface, text_rect)
+            txt = str(self.interval - self.tick // self.fps)
+            (self.text_surface2, self.text_rect2) = draw_text(txt, 24, self.width / 2, 3 * self.height / 4, "center")
         else:
-            self.spritesGroup.remove(self)
+            self.on = False
+            self.on_stop(self)
+
+    def draw(self, screen):
+        if not self.viseble:
+            return
+        self.surf.fill((169, 169, 169))
+        rect = self.image.get_rect()
+        rect.center = (self.width / 2, 3 * self.height / 4 )
+        self.surf.blit(self.image, rect)
+        if self.on:
+            self.surf.blit(self.text_surface2, self.text_rect2)
+        screen.blit(self.surf, self.rect)
+        screen.blit(self.text_surface1, self.text_rect1)
 
 class PlayerSprites(pygame.sprite.Sprite):
-    def __init__(self, playerImage, text, width = 100, height = 100, x = 0, y = 0):
+    def __init__(self, playerImage = None, nickname = '', width = 100, height = 100, x = 0, y = 0):
         pygame.sprite.Sprite.__init__(self)
         self.width = width
         self.height = height
@@ -58,50 +80,74 @@ class PlayerSprites(pygame.sprite.Sprite):
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
         self.rect.center = (x, y)
-        self.playerImage = pygame.transform.scale(playerImage, (width, height - 30))
+        self.text_size = 20
+        self.playerImage = pygame.transform.scale(playerImage, (width, height - 2 * self.text_size))
         self.playerImageRect = self.playerImage.get_rect()
         self.playerImageRect.midtop = (width / 2, 0)
-        (self.text_surface1, self.text_rect1) = draw_text(text, 15, width / 2, self.height - 30)
-        (self.text_surface2, self.text_rect2) = draw_text("Score: 0", 15, width / 2, self.height - 15)
+        self.nickname = nickname
+        self.text_surface1, self.text_rect1 = draw_text(nickname, self.text_size , width / 2, self.height - 2 * self.text_size)
+        self.text_surface2, self.text_rect2 = draw_text("Score: 0", self.text_size, width / 2, self.height - self.text_size)
         self.value = 0
+        self.viseble = True
     @property
     def score(self):
         return self.value
+
     @score.setter
     def score(self, x):
         self.value = x
         (self.text_surface2, self.text_rect2) = draw_text("Score: " + str(x), 15, self.width / 2, self.height - 15)
-    def draw(self, screen):
+    @property
+    def name(self):
+        return self.nickname;
+
+    @name.setter
+    def name(self, x):
+        self.nickname = x
+        (self.text_surface1, self.text_rect1) = draw_text(x, self.text_size , self.width / 2, self.height - 2 * self.text_size)
+   
+    def update(self):
         self.surf.fill((255,255,255))
         self.surf.blit(self.playerImage, self.playerImageRect)
         self.surf.blit(self.text_surface1, self.text_rect1)
         self.surf.blit(self.text_surface2, self.text_rect2)
+        
+    def draw(self, screen):
+        if not self.viseble:
+            return
         screen.blit(self.surf, self.rect)
 
 class Button(pygame.sprite.Sprite):
     button_normal_back_color = (169, 169, 169);
     button_hover_back_color = (169, 169, 169);
     button_pressed_back_color = (255, 255, 0);
-    def __init__(self, x, y, w, h, text, on_click=lambda x: None):
+    def __init__(self, x, y, Width, Height, text, on_click=lambda x: None):
         pygame.sprite.Sprite.__init__(self)
         self.x = x;
         self.y = y;
-        self.height = h;
-        self.width = w;
+        self.height = Height;
+        self.width = Width;
         self.surf = pygame.Surface((self.width, self.height))
         self.rect = self.surf.get_rect()
         self.rect.center = (x, y)
         self.state = 'normal'
         self.on_click = on_click
-        self.text = draw_text(text, 15, w / 2, y / 2, 1)
+        self.text = draw_text(text, Height // 3, Width / 2, Height / 2, "center")
+        self.viseble = True
         
+    def update(self):
+        pass
 
     def draw(self, screen):
+        if not self.viseble:
+            return
         self.surf.fill(self.back_color)
         self.surf.blit(self.text[0], self.text[1])
         screen.blit(self.surf, self.rect)
 
     def handle_mouse_event(self, type, pos):
+        if not self.viseble:
+            return
         if type == pygame.MOUSEMOTION:
             self.handle_mouse_move(pos)
         elif type == pygame.MOUSEBUTTONDOWN:
@@ -137,10 +183,16 @@ class InputBox:
         self.FONT = pygame.font.Font(font_name, 15)
         self.rect = pygame.Rect(x, y, w, h)
         self.color = self.COLOR_INACTIVE
+        self.w = w
+        self.h = h
         self.text = text
         self.txt_surface = self.FONT.render(text, True, self.color)
         self.active = False
+        self.viseble =True
+
     def handle_event(self, event):
+        if not self.viseble:
+            return
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             if self.rect.collidepoint(event.pos):
@@ -163,13 +215,102 @@ class InputBox:
                 self.txt_surface = self.FONT.render(self.text, True, self.color)
 
     def update(self):
-        # Resize the box if the text is too long.
-        width = max(200, self.txt_surface.get_width()+10)
-        self.rect.w = width
+        self.txt_surface = self.FONT.render(self.text, True, self.color)
+        pass
 
     def draw(self, screen):
+        if not self.viseble:
+            return
         # Blit the text.
-        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        screen.blit(self.txt_surface, (self.rect.x+self.w // 2, self.rect.y+self.h // 3))
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
+class RoundIter():
+    def __init__(self, cnt = 1):
+        self.filePath = os.path.join(os.path.dirname(__file__), 'video')
+        self.videoPath = []
+        random.seed()
+        for i in range(cnt):
+            numRound =  random.randint(1, 3)
+            video, timeCode = os.path.join(self.filePath, "round" + str(numRound) + '.mov'), os.path.join(self.filePath, "round" + str(numRound) + '.txt')
+            while (video, timeCode) in self.videoPath:
+                numRound =  random.randint(1, cnt)
+                video, timeCode = os.path.join(self.filePath, "round" + str(numRound) + '.mov'), os.path.join(self.filePath, "round" + str(numRound) + '.txt')
+            self.videoPath.append((video, timeCode))
+        self._start = 0
+        self._end = cnt  -1
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._start > self._end:
+            raise StopIteration()
+        tmp = self._start
+        self._start = tmp + 1
+        time = open(self.videoPath[tmp][1], 'r').read().split('|')
+        timecode = []
+        for t in time:
+            t = t.split(':')
+            mn = 1000
+            ans = 0
+            for el in t[::-1]:
+                ans += int(el) * mn
+                mn *= 60
+            timecode.append(ans)
+        return (self.videoPath[tmp][0], timecode)
+
+class CleverSurf(pygame.sprite.Sprite):
+    def __init__(self, surf = None, rect = None, x = None, y = None):
+        pygame.sprite.Sprite.__init__(self)
+        self.surf = surf
+        self.rect = rect
+        self.viseble = True
+        self.pos = (x, y)
+    
+    @property
+    def surf(self):
+        return self.s;
+
+    @surf.setter
+    def surf(self, x):
+        self.s = x
+    
+    @property
+    def rect(self):
+        return self.r;
+    
+    @rect.setter
+    def rect(self, x):
+        self.r = x
+    
+    @property
+    def pos(self):
+        return self.p;
+    
+    @pos.setter
+    def pos(self, pos):
+        self.p = pos
+        if (pos != (None, None)):
+            self.rect.center = pos
+
+    @property
+    def size(self):
+        return self.si;
+    
+    @size.setter
+    def size(self, size):
+        self.si = size
+        self.surf = pygame.transform.scale(self.surf, size)
+        self.rect = self.surf.get_rect()
+    
+    def update(self):
+        pass
+
+    def draw(self, screen):
+        if not self.viseble:
+            return
+        screen.blit(self.surf, self.rect)
+
+        
