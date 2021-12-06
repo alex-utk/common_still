@@ -2,6 +2,7 @@
 import telebot
 from room import Room
 from Ans import Answer
+import WebHook
 
 id_to_message = {
     0: 'Players we starting the game',
@@ -23,24 +24,29 @@ class WebGamePart:
         Смена состояние на начало игры
         """
         self.IsPlaying = True
+        self.send_template_to_room(1, 0, WebHook.bot)
 
     def stop_game(self):
         """
         Смена состояние на прекращение игры
         """
         self.IsPlaying = False
+        self.send_template_to_room(1, 3, WebHook.bot)
+
 
     def start_round(self):
         """
         Смена состояние на начало раунда
         """
         self.IsGivingAnswers = True
+        self.send_template_to_room(1, 1, WebHook.bot)
 
     def stop_round(self):
         """
         Смена состояние на прекращение раунда
         """
         self.IsGivingAnswers = False
+        self.send_template_to_room(1, 2, WebHook.bot)
 
     def add_answer(self, ans):
         """
@@ -98,8 +104,9 @@ class WebGamePart:
         """
         buf = []
         for p in self.Answers:
-            b = str(p.user) + ' ' + str(p.nick) + ' ' + str(p.text)
+            b = (str(p.nick), str(p.text))
             buf.append(b)
+        self.clear_answer()
         return buf
 
     def return_users(self):
@@ -109,6 +116,12 @@ class WebGamePart:
         """
         buf = []
         for i in range(self.knownRooms[0].count()):
-            b = str(self.knownRooms[0].UsersID[i]) + ' ' + str(self.knownRooms[0].UsersNick[i])
+            b = str(self.knownRooms[0].UsersNick[i])
             buf.append(b)
         return buf
+    def createRoom(self):
+        buf = Room()
+        #Заглушка, создание UID для комнаты на основе порядка её создания в боте
+        buf.setUID(len(self.knownRooms) + 1)
+        buf.set_lead(id)
+        self.knownRooms.append(buf)
