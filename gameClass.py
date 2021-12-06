@@ -30,7 +30,7 @@ class timerSprite(pygame.sprite.Sprite):
         self.on = False
         self.color = (0, 255, 0)
         self.image.fill(self.color)
-        self.viseble = True
+        self.visible = True
         self.x = x
         self.y = y 
         self.rect.center = (x, y)
@@ -60,7 +60,7 @@ class timerSprite(pygame.sprite.Sprite):
             self.on_stop(self)
 
     def draw(self, screen):
-        if not self.viseble:
+        if not self.visible:
             return
         self.surf.fill((169, 169, 169))
         rect = self.image.get_rect()
@@ -88,7 +88,7 @@ class PlayerSprites(pygame.sprite.Sprite):
         self.text_surface1, self.text_rect1 = draw_text(nickname, self.text_size , width / 2, self.height - 2 * self.text_size)
         self.text_surface2, self.text_rect2 = draw_text("Score: 0", self.text_size, width / 2, self.height - self.text_size)
         self.value = 0
-        self.viseble = True
+        self.visible = True
     @property
     def score(self):
         return self.value
@@ -113,7 +113,7 @@ class PlayerSprites(pygame.sprite.Sprite):
         self.surf.blit(self.text_surface2, self.text_rect2)
         
     def draw(self, screen):
-        if not self.viseble:
+        if not self.visible:
             return
         screen.blit(self.surf, self.rect)
 
@@ -133,20 +133,20 @@ class Button(pygame.sprite.Sprite):
         self.state = 'normal'
         self.on_click = on_click
         self.text = draw_text(text, Height // 3, Width / 2, Height / 2, "center")
-        self.viseble = True
+        self.visible = True
         
     def update(self):
         pass
 
     def draw(self, screen):
-        if not self.viseble:
+        if not self.visible:
             return
         self.surf.fill(self.back_color)
         self.surf.blit(self.text[0], self.text[1])
         screen.blit(self.surf, self.rect)
 
     def handle_mouse_event(self, type, pos):
-        if not self.viseble:
+        if not self.visible:
             return
         if type == pygame.MOUSEMOTION:
             self.handle_mouse_move(pos)
@@ -188,10 +188,10 @@ class InputBox:
         self.text = text
         self.txt_surface = self.FONT.render(text, True, self.color)
         self.active = False
-        self.viseble =True
+        self.visible =True
 
     def handle_event(self, event):
-        if not self.viseble:
+        if not self.visible:
             return
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
@@ -219,7 +219,7 @@ class InputBox:
         pass
 
     def draw(self, screen):
-        if not self.viseble:
+        if not self.visible:
             return
         # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x+self.w // 2, self.rect.y+self.h // 3))
@@ -266,7 +266,7 @@ class CleverSurf(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.surf = surf
         self.rect = rect
-        self.viseble = True
+        self.visible = True
         self.pos = (x, y)
     
     @property
@@ -309,7 +309,7 @@ class CleverSurf(pygame.sprite.Sprite):
         pass
 
     def draw(self, screen):
-        if not self.viseble:
+        if not self.visible:
             return
         screen.blit(self.surf, self.rect)
 

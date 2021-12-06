@@ -112,10 +112,10 @@ def command_exit_room(m):
         return
 
     mes_text = m.text[10:]
-    numBuf = int(mes_text)
+    #numBuf = int(mes_text)
     #Добавить обработку ошибки при неправильном номере комнаты!!!!
-    webGame.knownRooms[check1].remove(id, nick)
-    bot.send_message(id, 'You successfully exited Room: {}, your ID: {}'.format(numBuf, id))  
+    webGame.knownRooms[check1 - 1].remove(id, nick)
+    bot.send_message(id, 'You successfully exited Room: {}, your nick: {}'.format(check1 - 1, nick))  
 
 
 @bot.message_handler(commands=['send_ans'])
@@ -146,11 +146,6 @@ def command_send_ans(m):
     if check1 == -1:
         bot.send_message(id, 'You havent entered the Room yet')
         return
-    room_id = 0
-    for i in range(len(webGame.knownRooms)):
-        if webGame.knownRooms[i].UID == check1:
-            room_id = webGame.knownRooms[i].lead
-    bot.send_message(room_id, 'user:{} ans:{}'.format(id, mes_text))
     bot.send_message(id, 'user:{} - Your answer successfully send'.format(nick))
 
 
@@ -189,5 +184,3 @@ def command_sg(m):
 @bot.message_handler(commands=['sr'])
 def command_sr(m):
     webGame.start_round() 
-#Start message handling
-bot.polling()
