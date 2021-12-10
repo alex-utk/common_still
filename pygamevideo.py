@@ -1,8 +1,3 @@
-#                  Pygame Video Player                #
-#                LGPL 3.0 - Kadir Aksoy               #
-#       https://github.com/kadir014/pygamevideo       #
-
-
 import time
 import os
 import pygame
@@ -12,7 +7,6 @@ from ffpyplayer.player import MediaPlayer
 
 
 __version__ = "1.0.0"
-
 
 
 class Time:
@@ -120,7 +114,7 @@ class Video:
         self.ff.close_player()
         self.is_ready = False
 
-    # Control methods
+    # Методы для управления
     def getFrameForTime(self, time):
         self.buff.set(0, time)
         ret, frame = self.buff.read()
@@ -170,13 +164,13 @@ class Video:
 
     def pause(self):
         self.is_paused = True
-        sel.ff.set_pause(True)
+        self.ff.set_pause(True)
 
     def resume(self):
         self.is_paused = False
         self.ff.set_pause(False)
 
-    # Audio methods
+    # Методы для работы с аудио
 
     def mute(self):
         self.is_muted = True
@@ -193,7 +187,7 @@ class Video:
         self.volume = volume
         self.ff.set_volume(volume)
 
-    # Duration methods & properties
+    # Методы, связанные с длительностью
 
     @property
     def duration(self):
@@ -241,7 +235,7 @@ class Video:
     def seek_frame(self, frame):
         self.seek_time((frame / self.fps) * 1000)
 
-    # Dimension methods
+    # Методы для работы с размерностями видео
 
     def get_size(self):
         return (self.frame_width, self.frame_height)
@@ -273,7 +267,7 @@ class Video:
         if self.frame_height <= 0:
             raise ValueError(f"Height must be positive")
 
-    # Process & draw video
+    # Методы для обработки и работы с видео
 
     def _scaled_frame(self):
         if self.keep_aspect_ratio:
