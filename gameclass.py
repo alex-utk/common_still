@@ -117,3 +117,62 @@ class PlayerSprites(pygame.sprite.Sprite):
         if not self.visible:
             return
         screen.blit(self.surf, self.rect)
+
+class Button(pygame.sprite.Sprite):
+    button_normal_back_color = (169, 169, 169);
+    button_hover_back_color = (169, 169, 169);
+    button_pressed_back_color = (255, 255, 0);
+    def __init__(self, x, y, Width, Height, text, on_click=lambda x: None):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x;
+        self.y = y;
+        self.height = Height;
+        self.width = Width;
+        self.surf = pygame.Surface((self.width, self.height))
+        self.rect = self.surf.get_rect()
+        self.rect.center = (x, y)
+        self.state = 'normal'
+        self.on_click = on_click
+        self.text = draw_text(text, Height // 3, Width / 2, Height / 2, "center")
+        self.visible = True
+        
+    def update(self):
+        pass
+
+    def draw(self, screen):
+        if not self.visible:
+            return
+        self.surf.fill(self.back_color)
+        self.surf.blit(self.text[0], self.text[1])
+        screen.blit(self.surf, self.rect)
+
+    def handle_mouse_event(self, type, pos):
+        if not self.visible:
+            return
+        if type == pygame.MOUSEMOTION:
+            self.handle_mouse_move(pos)
+        elif type == pygame.MOUSEBUTTONDOWN:
+            self.handle_mouse_down(pos)
+        elif type == pygame.MOUSEBUTTONUP:
+            self.handle_mouse_up(pos)
+
+    def handle_mouse_move(self, pos):
+        if self.rect.collidepoint(pos):
+            if self.state != 'pressed':
+                self.state = 'hover'
+        else:
+            self.state = 'normal'
+
+    def handle_mouse_down(self, pos):
+        if self.rect.collidepoint(pos):
+            self.state = 'pressed'
+
+    def handle_mouse_up(self, pos):
+        if self.state == 'pressed':
+            self.on_click(self)
+            self.state = 'hover'
+    @property
+    def back_color(self):
+        return dict(normal= self.button_normal_back_color,
+                    hover= self.button_hover_back_color,
+                    pressed= self.button_pressed_back_color)[self.state]
