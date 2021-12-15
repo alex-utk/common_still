@@ -26,22 +26,22 @@ class timerSprite(pygame.sprite.Sprite):
     def __init__(self, Width = 100, Height = 100, x = 0, y = 0, fps = 30, on_stop = lambda x: None, text = ""):
         pygame.sprite.Sprite.__init__(self)
         self.tick = 0
-        self.fps = fps
-        self.image = pygame.Surface((Width - 100, 25))
-        self.surf = pygame.Surface((Width, Height))
+        self.fps = fps # кадры в секунду
+        self.image = pygame.Surface((Width - 100, 25)) # изображение
+        self.surf = pygame.Surface((Width, Height)) # поверхность
         self.surf.fill((169, 169, 169))
-        self.rect = self.surf.get_rect()
-        self.width = Width
-        self.height = Height
-        self.on = False
-        self.color = (0, 255, 0)
-        self.image.fill(self.color)
-        self.visible = True
-        self.x = x
-        self.y = y 
-        self.rect.center = (x, y)
-        self.interval = 0
-        self.on_stop = on_stop
+        self.rect = self.surf.get_rect() # прямоугольник
+        self.width = Width # ширина
+        self.height = Height # высота
+        self.on = False # флаг включен
+        self.color = (0, 255, 0) # цвет
+        self.image.fill(self.color) 
+        self.visible = True # видимость
+        self.x = x # икс
+        self.y = y # игрик
+        self.rect.center = (x, y) # центр прямоугольника 
+        self.interval = 0 # интервал
+        self.on_stop = on_stop # остановка
         (self.text_surface1, self.text_rect1) = draw_text(text, 50, self.x, self.y - Height / 4, "center")
 
     def timerStart(self, interval, on_stop = lambda x: None):
@@ -91,21 +91,21 @@ class PlayerSprites(pygame.sprite.Sprite):
     """
     def __init__(self, playerImage = None, nickname = '', width = 100, height = 100, x = 0, y = 0):
         pygame.sprite.Sprite.__init__(self)
-        self.width = width
-        self.height = height
-        self.surf = pygame.Surface((self.width, self.height))
+        self.width = width # ширина
+        self.height = height # высота
+        self.surf = pygame.Surface((self.width, self.height))# поверхность
         self.surf.fill((255, 255, 255))
-        self.rect = self.surf.get_rect()
-        self.rect.center = (x, y)
-        self.text_size = 20
-        self.playerImage = pygame.transform.scale(playerImage, (width, height - 2 * self.text_size))
-        self.playerImageRect = self.playerImage.get_rect()
-        self.playerImageRect.midtop = (width / 2, 0)
-        self.nickname = nickname
+        self.rect = self.surf.get_rect() # прямоугольник
+        self.rect.center = (x, y) # центр прямоугольника
+        self.text_size = 20 # размер текста
+        self.playerImage = pygame.transform.scale(playerImage, (width, height - 2 * self.text_size)) # Изображение игрока
+        self.playerImageRect = self.playerImage.get_rect() #Прямоугольник изображения игрока
+        self.playerImageRect.midtop = (width / 2, 0) # Координата изображения игрока
+        self.nickname = nickname # Псевдоним
         self.text_surface1, self.text_rect1 = draw_text(nickname, self.text_size , width / 2, self.height - 2 * self.text_size)
         self.text_surface2, self.text_rect2 = draw_text("Score: 0", self.text_size, width / 2, self.height - self.text_size)
-        self.value = 0
-        self.visible = True
+        self.value = 0 # Счёт
+        self.visible = True # Видимость
     @property
     def score(self):
         """
@@ -160,17 +160,17 @@ class Button(pygame.sprite.Sprite):
     button_pressed_back_color = (255, 255, 0);
     def __init__(self, x, y, Width, Height, text, on_click=lambda x: None): 
         pygame.sprite.Sprite.__init__(self)
-        self.x = x;
-        self.y = y;
-        self.height = Height;
-        self.width = Width;
-        self.surf = pygame.Surface((self.width, self.height))
-        self.rect = self.surf.get_rect()
-        self.rect.center = (x, y)
-        self.state = 'normal'
-        self.on_click = on_click
-        self.text = draw_text(text, Height // 3, Width / 2, Height / 2, "center")
-        self.visible = True
+        self.x = x; # икс
+        self.y = y; # игрик
+        self.height = Height; # высота
+        self.width = Width; # ширина
+        self.surf = pygame.Surface((self.width, self.height)) # поверхность
+        self.rect = self.surf.get_rect() # прямоугольник
+        self.rect.center = (x, y) # центр прямоугольника
+        self.state = 'normal' # состояние
+        self.on_click = on_click # нажате
+        self.text = draw_text(text, Height // 3, Width / 2, Height / 2, "center") # текст
+        self.visible = True # Видимость
         
     def update(self):
         """
