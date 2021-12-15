@@ -73,6 +73,8 @@ class timerSprite(pygame.sprite.Sprite):
         screen.blit(self.text_surface1, self.text_rect1)
 
 class PlayerSprites(pygame.sprite.Sprite):
+    """ Класс спрайтов игроков
+    """
     def __init__(self, playerImage = None, nickname = '', width = 100, height = 100, x = 0, y = 0):
         pygame.sprite.Sprite.__init__(self)
         self.width = width
