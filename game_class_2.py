@@ -146,5 +146,11 @@ class CleverSurf(pygame.sprite.Sprite):
         self.si = size
         self.surf = pygame.transform.scale(self.surf, size)
         self.rect = self.surf.get_rect()
-    
+    def update(self):
+        pass
+
+    def draw(self, screen):
+        if not self.visible:
+            return
+        screen.blit(self.surf, self.rect)      
     
