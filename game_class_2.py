@@ -119,3 +119,8 @@ class CleverSurf(pygame.sprite.Sprite):
     def surf(self, x):
         self.s = x
     
+    @property
+    def rect(self):
+        return self.r;
+    
+ 
