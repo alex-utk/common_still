@@ -6,6 +6,9 @@ import random
 
 font_name = pygame.font.match_font('arial')
 def draw_text(text, size, x, y, mode = "midtop"):
+    """
+    Отрисовка текста
+    """
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, (0, 0, 0))
     text_rect = text_surface.get_rect()
@@ -18,6 +21,8 @@ def draw_text(text, size, x, y, mode = "midtop"):
     return text_surface, text_rect
     
 class timerSprite(pygame.sprite.Sprite):
+        """ Спрайт таймера
+        """
     def __init__(self, Width = 100, Height = 100, x = 0, y = 0, fps = 30, on_stop = lambda x: None, text = ""):
         pygame.sprite.Sprite.__init__(self)
         self.tick = 0
@@ -40,12 +45,18 @@ class timerSprite(pygame.sprite.Sprite):
         (self.text_surface1, self.text_rect1) = draw_text(text, 50, self.x, self.y - Height / 4, "center")
 
     def timerStart(self, interval, on_stop = lambda x: None):
+        """
+        Начало таймера
+        """
         self.interval = interval
         self.on = True
         self.tick = 0
         self.on_stop = on_stop
     
     def update(self):
+        """
+        Обновление
+        """
         if not self.on:
             return
         cntTick = self.fps * self.interval
@@ -61,6 +72,9 @@ class timerSprite(pygame.sprite.Sprite):
             self.on_stop(self)
 
     def draw(self, screen):
+        """
+        Отрисовка
+        """
         if not self.visible:
             return
         self.surf.fill((169, 169, 169))
