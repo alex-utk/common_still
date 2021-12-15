@@ -72,3 +72,48 @@ class timerSprite(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
         screen.blit(self.text_surface1, self.text_rect1)
 
+class PlayerSprites(pygame.sprite.Sprite):
+    def __init__(self, playerImage = None, nickname = '', width = 100, height = 100, x = 0, y = 0):
+        pygame.sprite.Sprite.__init__(self)
+        self.width = width
+        self.height = height
+        self.surf = pygame.Surface((self.width, self.height))
+        self.surf.fill((255, 255, 255))
+        self.rect = self.surf.get_rect()
+        self.rect.center = (x, y)
+        self.text_size = 20
+        self.playerImage = pygame.transform.scale(playerImage, (width, height - 2 * self.text_size))
+        self.playerImageRect = self.playerImage.get_rect()
+        self.playerImageRect.midtop = (width / 2, 0)
+        self.nickname = nickname
+        self.text_surface1, self.text_rect1 = draw_text(nickname, self.text_size , width / 2, self.height - 2 * self.text_size)
+        self.text_surface2, self.text_rect2 = draw_text("Score: 0", self.text_size, width / 2, self.height - self.text_size)
+        self.value = 0
+        self.visible = True
+    @property
+    def score(self):
+        return self.value
+
+    @score.setter
+    def score(self, x):
+        self.value = x
+        (self.text_surface2, self.text_rect2) = draw_text("Score: " + str(x), 15, self.width / 2, self.height - 15)
+    @property
+    def name(self):
+        return self.nickname;
+
+    @name.setter
+    def name(self, x):
+        self.nickname = x
+        (self.text_surface1, self.text_rect1) = draw_text(x, self.text_size , self.width / 2, self.height - 2 * self.text_size)
+   
+    def update(self):
+        self.surf.fill((255,255,255))
+        self.surf.blit(self.playerImage, self.playerImageRect)
+        self.surf.blit(self.text_surface1, self.text_rect1)
+        self.surf.blit(self.text_surface2, self.text_rect2)
+        
+    def draw(self, screen):
+        if not self.visible:
+            return
+        screen.blit(self.surf, self.rect)
