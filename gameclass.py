@@ -6,6 +6,9 @@ import random
 
 font_name = pygame.font.match_font('arial')
 def draw_text(text, size, x, y, mode = "midtop"):
+    """
+    Отрисовка текста
+    """
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, (0, 0, 0))
     text_rect = text_surface.get_rect()
@@ -18,6 +21,8 @@ def draw_text(text, size, x, y, mode = "midtop"):
     return text_surface, text_rect
     
 class timerSprite(pygame.sprite.Sprite):
+        """ Спрайт таймера
+        """
     def __init__(self, Width = 100, Height = 100, x = 0, y = 0, fps = 30, on_stop = lambda x: None, text = ""):
         pygame.sprite.Sprite.__init__(self)
         self.tick = 0
@@ -40,12 +45,18 @@ class timerSprite(pygame.sprite.Sprite):
         (self.text_surface1, self.text_rect1) = draw_text(text, 50, self.x, self.y - Height / 4, "center")
 
     def timerStart(self, interval, on_stop = lambda x: None):
+        """
+        Начало таймера
+        """
         self.interval = interval
         self.on = True
         self.tick = 0
         self.on_stop = on_stop
     
     def update(self):
+        """
+        Обновление
+        """
         if not self.on:
             return
         cntTick = self.fps * self.interval
@@ -61,6 +72,9 @@ class timerSprite(pygame.sprite.Sprite):
             self.on_stop(self)
 
     def draw(self, screen):
+        """
+        Отрисовка
+        """
         if not self.visible:
             return
         self.surf.fill((169, 169, 169))
@@ -73,6 +87,8 @@ class timerSprite(pygame.sprite.Sprite):
         screen.blit(self.text_surface1, self.text_rect1)
 
 class PlayerSprites(pygame.sprite.Sprite):
+    """ Класс спрайтов игроков
+    """
     def __init__(self, playerImage = None, nickname = '', width = 100, height = 100, x = 0, y = 0):
         pygame.sprite.Sprite.__init__(self)
         self.width = width
@@ -92,37 +108,57 @@ class PlayerSprites(pygame.sprite.Sprite):
         self.visible = True
     @property
     def score(self):
+        """
+        Счёт
+        """
         return self.value
 
     @score.setter
     def score(self, x):
+        """
+        Счёт
+        """
         self.value = x
         (self.text_surface2, self.text_rect2) = draw_text("Score: " + str(x), 15, self.width / 2, self.height - 15)
     @property
     def name(self):
+        """
+        Имя
+        """
         return self.nickname;
 
     @name.setter
     def name(self, x):
+        """
+        Имя
+        """
         self.nickname = x
         (self.text_surface1, self.text_rect1) = draw_text(x, self.text_size , self.width / 2, self.height - 2 * self.text_size)
    
     def update(self):
+        """
+        Обновление
+        """
         self.surf.fill((255,255,255))
         self.surf.blit(self.playerImage, self.playerImageRect)
         self.surf.blit(self.text_surface1, self.text_rect1)
         self.surf.blit(self.text_surface2, self.text_rect2)
         
     def draw(self, screen):
+        """
+        Отрисовка
+        """
         if not self.visible:
             return
         screen.blit(self.surf, self.rect)
 
 class Button(pygame.sprite.Sprite):
+    """ Класс кнопки
+    """
     button_normal_back_color = (169, 169, 169);
     button_hover_back_color = (169, 169, 169);
     button_pressed_back_color = (255, 255, 0);
-    def __init__(self, x, y, Width, Height, text, on_click=lambda x: None):
+    def __init__(self, x, y, Width, Height, text, on_click=lambda x: None): 
         pygame.sprite.Sprite.__init__(self)
         self.x = x;
         self.y = y;
@@ -137,9 +173,15 @@ class Button(pygame.sprite.Sprite):
         self.visible = True
         
     def update(self):
+        """
+        Обновить объект
+        """
         pass
 
     def draw(self, screen):
+        """
+        Отрисовка объекта
+        """
         if not self.visible:
             return
         self.surf.fill(self.back_color)
@@ -147,6 +189,9 @@ class Button(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
 
     def handle_mouse_event(self, type, pos):
+        """
+        Событие для мыши
+        """
         if not self.visible:
             return
         if type == pygame.MOUSEMOTION:
@@ -157,6 +202,9 @@ class Button(pygame.sprite.Sprite):
             self.handle_mouse_up(pos)
 
     def handle_mouse_move(self, pos):
+        """
+        Движение мыши
+        """
         if self.rect.collidepoint(pos):
             if self.state != 'pressed':
                 self.state = 'hover'
@@ -164,15 +212,24 @@ class Button(pygame.sprite.Sprite):
             self.state = 'normal'
 
     def handle_mouse_down(self, pos):
+        """
+        Нажатие мыши
+        """
         if self.rect.collidepoint(pos):
             self.state = 'pressed'
 
     def handle_mouse_up(self, pos):
+        """
+        Отжим мыши
+        """
         if self.state == 'pressed':
             self.on_click(self)
             self.state = 'hover'
     @property
     def back_color(self):
+        """
+        Цвет
+        """
         return dict(normal= self.button_normal_back_color,
                     hover= self.button_hover_back_color,
                     pressed= self.button_pressed_back_color)[self.state]
