@@ -92,28 +92,46 @@ class PlayerSprites(pygame.sprite.Sprite):
         self.visible = True
     @property
     def score(self):
+        """
+        Счёт
+        """
         return self.value
 
     @score.setter
     def score(self, x):
+        """
+        Счёт
+        """
         self.value = x
         (self.text_surface2, self.text_rect2) = draw_text("Score: " + str(x), 15, self.width / 2, self.height - 15)
     @property
     def name(self):
+        """
+        Имя
+        """
         return self.nickname;
 
     @name.setter
     def name(self, x):
+        """
+        Имя
+        """
         self.nickname = x
         (self.text_surface1, self.text_rect1) = draw_text(x, self.text_size , self.width / 2, self.height - 2 * self.text_size)
    
     def update(self):
+        """
+        Обновление
+        """
         self.surf.fill((255,255,255))
         self.surf.blit(self.playerImage, self.playerImageRect)
         self.surf.blit(self.text_surface1, self.text_rect1)
         self.surf.blit(self.text_surface2, self.text_rect2)
         
     def draw(self, screen):
+        """
+        Отрисовка
+        """
         if not self.visible:
             return
         screen.blit(self.surf, self.rect)
