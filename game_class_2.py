@@ -131,3 +131,9 @@ class CleverSurf(pygame.sprite.Sprite):
     def pos(self):
         return self.p;
     
+    @pos.setter
+    def pos(self, pos):
+        self.p = pos
+        if (pos != (None, None)):
+            self.rect.center = pos
+
