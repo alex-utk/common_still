@@ -119,6 +119,8 @@ class PlayerSprites(pygame.sprite.Sprite):
         screen.blit(self.surf, self.rect)
 
 class Button(pygame.sprite.Sprite):
+    """ Класс кнопки
+    """
     button_normal_back_color = (169, 169, 169);
     button_hover_back_color = (169, 169, 169);
     button_pressed_back_color = (255, 255, 0);
