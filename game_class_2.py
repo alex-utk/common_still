@@ -137,3 +137,14 @@ class CleverSurf(pygame.sprite.Sprite):
         if (pos != (None, None)):
             self.rect.center = pos
 
+    @property
+    def size(self):
+        return self.si;
+    
+    @size.setter
+    def size(self, size):
+        self.si = size
+        self.surf = pygame.transform.scale(self.surf, size)
+        self.rect = self.surf.get_rect()
+    
+    
