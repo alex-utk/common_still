@@ -111,3 +111,7 @@ class CleverSurf(pygame.sprite.Sprite):
         self.visible = True
         self.pos = (x, y)
     
+    @property
+    def surf(self):
+        return self.s;
+
