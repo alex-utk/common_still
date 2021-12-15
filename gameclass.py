@@ -4,6 +4,19 @@ import os
 import random
 
 
+font_name = pygame.font.match_font('arial')
+def draw_text(text, size, x, y, mode = "midtop"):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, (0, 0, 0))
+    text_rect = text_surface.get_rect()
+    if mode == "midtop":
+        text_rect.midtop = (x, y)
+    elif mode == "topleft":
+        text_rect.topleft = (x, y)
+    elif mode == "center":
+        text_rect.center = (x, y)
+    return text_surface, text_rect
+    
 class timerSprite(pygame.sprite.Sprite):
     def __init__(self, Width = 100, Height = 100, x = 0, y = 0, fps = 30, on_stop = lambda x: None, text = ""):
         pygame.sprite.Sprite.__init__(self)
