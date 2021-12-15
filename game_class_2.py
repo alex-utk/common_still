@@ -68,3 +68,18 @@ def handle_event(self, event):
             # Blit the rect.
             pygame.draw.rect(screen, self.color, self.rect, 2)
 
+class RoundIter():
+    def __init__(self, cnt = 1):
+        self.filePath = os.path.join(os.path.dirname(__file__), 'video')
+        self.videoPath = []
+        random.seed()
+        for i in range(cnt):
+            numRound =  random.randint(1, 3)
+            video, timeCode = os.path.join(self.filePath, "round" + str(numRound) + '.mov'), os.path.join(self.filePath, "round" + str(numRound) + '.txt')
+            while (video, timeCode) in self.videoPath:
+                numRound =  random.randint(1, cnt)
+                video, timeCode = os.path.join(self.filePath, "round" + str(numRound) + '.mov'), os.path.join(self.filePath, "round" + str(numRound) + '.txt')
+            self.videoPath.append((video, timeCode))
+        self._start = 0
+        self._end = cnt  -1
+
