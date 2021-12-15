@@ -86,3 +86,20 @@ class RoundIter():
     def __iter__(self):
         return self
 
+    def __next__(self):
+        if self._start > self._end:
+            raise StopIteration()
+        tmp = self._start
+        self._start = tmp + 1
+        time = open(self.videoPath[tmp][1], 'r').read().split('|')
+        timecode = []
+        for t in time:
+            t = t.split(':')
+            mn = 1000
+            ans = 0
+            for el in t[::-1]:
+                ans += int(el) * mn
+                mn *= 60
+            timecode.append(ans)
+        return (self.videoPath[tmp][0], timecode)
+
