@@ -103,3 +103,11 @@ class RoundIter():
             timecode.append(ans)
         return (self.videoPath[tmp][0], timecode)
 
+class CleverSurf(pygame.sprite.Sprite):
+    def __init__(self, surf = None, rect = None, x = None, y = None):
+        pygame.sprite.Sprite.__init__(self)
+        self.surf = surf
+        self.rect = rect
+        self.visible = True
+        self.pos = (x, y)
+    
