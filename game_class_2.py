@@ -83,3 +83,6 @@ class RoundIter():
         self._start = 0
         self._end = cnt  -1
 
+    def __iter__(self):
+        return self
+
