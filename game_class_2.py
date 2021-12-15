@@ -123,4 +123,7 @@ class CleverSurf(pygame.sprite.Sprite):
     def rect(self):
         return self.r;
     
- 
+    @rect.setter
+    def rect(self, x):
+        self.r = x
+    
