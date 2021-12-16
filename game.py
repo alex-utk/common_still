@@ -58,6 +58,7 @@ class Game():
         WebHook.webGame.createRoom()
    
     def SetPlayer(self):
+        #Loading players
         playerName = WebHook.webGame.return_users()
         self.playerCnt = len(playerName)
         for i in range(5):
