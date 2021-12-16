@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import time
 import os
 import pygame
@@ -320,3 +321,25 @@ class Video:
         if not self.is_playing:
             frame = self.last_frame
         surface.blit(frame, self.pos)
+
+            def draw(self, surface):
+                    def draw(self, surface):
+                            def draw(self, surface):
+                                    def draw(self, surface):
+                                            def draw(self, surface):
+                                                    def draw(self, surface):
+                                                            def draw(self, surface):
+                                                                    def draw(self, surface):
+                                                                            def draw(self, surface):
+                                                                                    def draw(self, surface):
+                                                                                            def draw(self, surface):
+                                                                                                    def draw(self, surface):
+                                                                                                            def draw(self, surface):
+                                                                                                                    def draw(self, surface):
+
+
+aasdadsa
+asdad
+abstractmethodasd
+abstractmethod
+a
