@@ -68,6 +68,7 @@ class Game():
             self.sprites[i].visible = True
 
     def StartGame(self, button):
+        #Change game stage for start
         self.gameStage = "game in process"
         self.roundStage = "start"
         self.startButton.visible = False
