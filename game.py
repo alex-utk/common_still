@@ -25,6 +25,7 @@ class Game():
         self.bgRect = self.bg.get_rect()
         self.font_name = '8-BIT WONDER.TTF'
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
+        #data initialization
         gameClass.font_name = pygame_menu.font.FONT_COMIC_NEUE
         self.startButton = gameClass.Button(x = 800, y = 500, Width = 200, Height = 100, text = "Start Game", on_click = self.StartGame)
         self.skipButton = gameClass.Button(x = 60, y = 25, Width = 120, Height = 50, text = "Skip video", on_click = self.Skip)
