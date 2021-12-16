@@ -336,4 +336,14 @@ class Video:
 
 
 
+    def draw(self, surface):
+        frame = self.get_frame()
+        if not self.is_playing:
+            frame = self.last_frame
+        surface.blit(frame, self.pos)
 
+    def draw(self, surface):
+        frame = self.get_frame()
+        if not self.is_playing:
+            frame = self.last_frame
+        surface.blit(frame, self.pos)
