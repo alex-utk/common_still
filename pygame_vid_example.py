@@ -37,11 +37,6 @@ while run:
     video.draw_to(window, (0, 0))
     pygame.display.update()
 
-    # set window title to current duration of video as hour:minute:second
-    #t = video.current_time.format("%h:%m:%s")
-    #pygame.display.set_caption(t)
-    # start video
-video.play()
 
 # main loop
 run = True
@@ -70,8 +65,11 @@ while run:
     # this function must be called every tick
     video.draw_to(window, (0, 0))
     pygame.display.update()
-
+            run = False
+    # draw video to display surface
+    # this function must be called every tick
+    video.draw_to(window, (0, 0))
+    pygame.display.update()
     # set window title to current duration of video as hour:minute:second
     #t = video.current_time.format("%h:%m:%s")
     #pygame.display.set_caption(t)
-    
