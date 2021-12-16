@@ -75,6 +75,7 @@ class Game():
         WebHook.webGame.start_game()
 
     def AnswerGiven(self, timer):
+        #Change game stage for stop answer
         self.roundStage = "stop answer"
         self.timer.visible = False
         self.frame.visible = False
