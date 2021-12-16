@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import time
 import os
 import pygame
@@ -337,27 +338,8 @@ class Video:
                                                                                                                     def draw(self, surface):
 
 
-
-QEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
-aQEFNinefIWNEGIMwekgmw
+aasdadsa
+asdad
+abstractmethodasd
+abstractmethod
 a
