@@ -85,6 +85,7 @@ class Game():
         self.video.seek_time(self.video.duration)
     
     def SetMark(self, button):
+        #Change game stage for mark stage
         nickname = self.answer[self.currPlayer][0]
         ind = 0
         for i in range(5):
