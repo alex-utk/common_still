@@ -5,7 +5,6 @@ import pygame_menu
 import pygamevideo
 import WebHook
 
-
 class Game():
     def __init__(self, fps = 60, roundCnt = 2):
         pygame.init()
@@ -13,15 +12,21 @@ class Game():
         self.roundStage = "start"
         self.game_folder = os.path.dirname(__file__)
         self.img_folder = os.path.join(self.game_folder, 'img')
+        self.bg = pygame.image.load(os.path.join(self.img_folder, 'bg.jpg'))
         self.running, self.playing = True, False    #Статусы Игра работает\Игра запущена
         self.DISPLAY_W, self.DISPLAY_H = 1600, 1000   #Размеры окна width и height
         self.fps = fps
         self.display = pygame.Surface((self.DISPLAY_W, self.DISPLAY_H))
         self.window = pygame.display.set_mode((self.DISPLAY_W, self.DISPLAY_H), flags = pygame.NOFRAME)
+        self.bg = pygame.transform.scale(self.bg.convert(), (1600, 1000))
+        self.frame = pygame.image.load(os.path.join(self.img_folder, 'frame.png'))
+        self.frame = gameClass.CleverSurf(self.frame, self.frame.get_rect())
+        self.frame.pos = (800, 500)
+        self.bgRect = self.bg.get_rect()
         self.font_name = '8-BIT WONDER.TTF'
         self.BLACK, self.WHITE = (0, 0, 0), (255, 255, 255)
         gameClass.font_name = pygame_menu.font.FONT_COMIC_NEUE
-        self.startButton = gameClass.Button(x = 800, y = 500, Width = 200, Height = 100, text = "Start Gasme", on_click = self.StartGame)
+        self.startButton = gameClass.Button(x = 800, y = 500, Width = 200, Height = 100, text = "Start Game", on_click = self.StartGame)
         self.skipButton = gameClass.Button(x = 60, y = 25, Width = 120, Height = 50, text = "Skip video", on_click = self.Skip)
         self.timer = gameClass.timerSprite(x = 800, y = 500, Width = 800, Height = 200, fps = self.fps, text = "It's time to give answer!!!")
         self.markSurf = gameClass.CleverSurf()
@@ -30,7 +35,6 @@ class Game():
         self.snipSurf3 = gameClass.CleverSurf()
         surf = pygame.Surface((1200, 600))
         surf.fill((255,255,255))
-        self.plug =  gameClass.CleverSurf(surf, surf.get_rect(), 800, 500)
         self.markButton = gameClass.Button(975, 600, 120, 50, "ok", self.SetMark)
         self.inputBox = gameClass.InputBox(770, 575, 120, 50)
         self.nickSurf = gameClass.CleverSurf()
@@ -39,12 +43,12 @@ class Game():
         self.textSurf = gameClass.CleverSurf(text_surf, text_rect)
         leder_surf, leder_rect = gameClass.draw_text("Winner !!! Well, now let's disperse, get out of here", 30, 800, 650, "center")
         self.mesSurf = gameClass.CleverSurf(leder_surf, leder_rect)
-        self.sprites = [gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "No one", 120, 180, 100, 500),
-                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "2", 120, 180, 1500, 500),
-                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "3", 120, 180, 800, 100),
-                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "4", 120, 180, 600, 900),
-                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "5", 120, 180, 1000, 900),
-                       self.startButton, self.skipButton, self.timer, self.plug, self.markSurf, self.snipSurf1, self.snipSurf2, self.snipSurf3, self.textSurf,
+        self.sprites = [gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "No one", 120, 180, 800, 75),
+                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "1", 120, 180, 1500, 500),
+                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "2", 120, 180, 1000, 875),
+                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "3", 120, 180, 600, 875),
+                       gameClass.PlayerSprites(pygame.image.load(os.path.join(self.img_folder, '11.png')).convert(), "4", 120, 180, 100, 500),
+                       self.startButton, self.skipButton, self.timer, self.frame, self.markSurf, self.snipSurf1, self.snipSurf2, self.snipSurf3, self.textSurf,
                        self.ansSurf, self.nickSurf, self.inputBox, self.markButton, self.mesSurf]
         self.currPlayer = 0
         self.roundCnt = roundCnt
@@ -70,13 +74,19 @@ class Game():
     def AnswerGiven(self, timer):
         self.roundStage = "stop answer"
         self.timer.visible = False
+        self.frame.visible = False
         WebHook.webGame.stop_round()
     
     def Skip(self, button):
         self.video.seek_time(self.video.duration)
     
     def SetMark(self, button):
-        player = self.sprites[self.currPlayer]
+        nickname = self.answer[self.currPlayer][0]
+        ind = 0
+        for i in range(5):
+            if self.sprites[i].name == nickname:
+                ind = i
+        player = self.sprites[ind]
         try:
             player.score += int(self.inputBox.text)
         except ValueError:
@@ -131,7 +141,7 @@ class Game():
                 self.skipButton.visible = True
                 for i in range(self.playerCnt):
                     self.sprites[i].visible = True
-                self.plug.visible = False
+                self.frame.visible = True
                 self.snipSurf1.visible = False
                 self.snipSurf2.visible = False
                 self.snipSurf3.visible = False
@@ -153,13 +163,12 @@ class Game():
             self.timer.visible = True
             if not self.timer.on:
                 WebHook.webGame.start_round()
-                self.timer.timerStart(5, self.AnswerGiven)
+                self.timer.timerStart(30, self.AnswerGiven)
         elif self.roundStage == "stop answer":
             self.currPlayer = 0
             self.answer = WebHook.webGame.return_answers()
             for i in range(self.playerCnt):
                 self.sprites[i].visible = False
-            self.plug.visible = True
             self.snipSurf1.visible = True
             self.snipSurf2.visible = True
             self.snipSurf3.visible = True
@@ -216,11 +225,12 @@ class Game():
 
             for sprite in self.sprites:
                 sprite.update()
-
+            
             self.display.fill(self.WHITE)
+            self.display.blit(self.bg, self.bgRect)
             self.display.blit(gameCode[0], gameCode[1])
             self.window.blit(self.display, (0, 0))
-            if self.video != None:
+            if self.video != None and self.roundStage != "mark answer":
                 self.video.draw(self.window)
             for sprite in self.sprites:
                 sprite.draw(self.window)
